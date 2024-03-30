@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 public class EditorPersona extends JFrame {
     private JTextField nomeField;
@@ -58,15 +61,15 @@ public class EditorPersona extends JFrame {
                 String telefono = telefonoField.getText();
                 if(!StringaSoloNumeri(telefono)){
                     JOptionPane.showMessageDialog(null, "Inserisci un numero di telefono valido.");
-                }
-                else if(telefono.isEmpty()){
+                    return; // Esce dal metodo se il numero di telefono non è valido
+                } else if(telefono.isEmpty()){
                     telefono = "-1";
                 }
                 String eta = etaField.getText();
                 if(!StringaSoloNumeri(eta)){
                     JOptionPane.showMessageDialog(null, "Inserisci un valore valido per l'età.");
-                }
-                else if(eta.isEmpty()){
+                    return; // Esce dal metodo se l'età non è valida
+                } else if(eta.isEmpty()){
                     eta = "-1";
                 }
 
@@ -81,8 +84,17 @@ public class EditorPersona extends JFrame {
                     rubrica.refreshTable();
                 }
                 dispose();
+                String filePath = "informazioni.txt";
+                try (PrintStream printStream = new PrintStream(new FileOutputStream(new File(filePath)))) {
+                    for(Persona persona: rubrica.rubrica){
+                        printStream.println(persona.getNome()+";"+persona.getCognome()+";"+ persona.getIndirizzo()+";"+persona.getTelefono()+";"+persona.getEta());
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Errore durante la scrittura su file: " + ex.getMessage());
+                }
             }
         });
+
 
         JButton annullaButton = new JButton("Annulla");
         annullaButton.addActionListener(new ActionListener() {

@@ -6,14 +6,41 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import java.util.Vector;
 
 public class RubricaTelefonica extends JFrame {
     private JTable tabella;
     private DefaultTableModel modello; //Modello tabella
-    private Vector<Persona> rubrica = new Vector<>();
+    public Vector<Persona> rubrica = new Vector<>();
 
     public RubricaTelefonica() {
+
+        // CARICO I CONTATTI GIÀ PRESENTI NEL FILE RUBRICA NEL VETTORE RUBRICA;
+
+        String filePath = "informazioni.txt";
+        try {
+            File file = new File(filePath);
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String riga = scanner.nextLine(); // Legge una riga dal file
+                String[] elementi = riga.split(";");
+                Persona persona = new Persona(elementi[0], elementi[1], elementi[2], elementi[3], Integer.parseInt(elementi[4]));
+                rubrica.add(persona);
+
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+
+        }
+
+        //CARICO L'INTERFACCIA;
+
         setTitle("Rubrica Telefonica");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //chiudi tutto
         setSize(700, 500);
@@ -33,6 +60,11 @@ public class RubricaTelefonica extends JFrame {
         JButton nuovoButton = new JButton("Nuovo");
         JButton modificaButton = new JButton("Modifica");
         JButton eliminaButton = new JButton("Elimina");
+
+        //CARICO IL VETTORE RUBRICA NELL'INTERFACCIA;
+
+        refreshTable();
+
 
         nuovoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -63,6 +95,13 @@ public class RubricaTelefonica extends JFrame {
                         refreshTable();
                     }
                 }
+                try (PrintStream printStream = new PrintStream(new FileOutputStream(new File(filePath)))) {
+                    for(Persona persona: rubrica){
+                        printStream.println(persona.getNome()+";"+persona.getCognome()+";"+ persona.getIndirizzo()+";"+persona.getTelefono()+";"+persona.getEta());
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Errore durante la scrittura su file: " + ex.getMessage());
+                }
             }
         });
 
@@ -73,6 +112,8 @@ public class RubricaTelefonica extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
+
+
     }
 
     public void openEditor(Persona persona) {
@@ -88,7 +129,7 @@ public class RubricaTelefonica extends JFrame {
     public void refreshTable() {
         modello.setRowCount(0);
         for (Persona persona : rubrica) {
-            modello.addRow(new Object[]{persona.getNome(), persona.getCognome(), persona.getIndirizzo(), persona.getTelefono(), persona.getEta()});
+            modello.addRow(new Object[]{persona.getNome(), persona.getCognome(), persona.getTelefono()});
         }
     }
 }
