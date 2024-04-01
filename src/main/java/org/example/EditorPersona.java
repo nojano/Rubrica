@@ -84,6 +84,8 @@ public class EditorPersona extends JFrame {
                     rubrica.refreshTable();
                 }
                 dispose();
+
+
                 String filePath = "informazioni.txt";
                 try (PrintStream printStream = new PrintStream(new FileOutputStream(new File(filePath)))) {
                     for(Persona persona: rubrica.rubrica){

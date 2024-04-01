@@ -22,6 +22,8 @@ public class RubricaTelefonica extends JFrame {
 
         // CARICO I CONTATTI GIÀ PRESENTI NEL FILE RUBRICA NEL VETTORE RUBRICA;
 
+        //INIZIO CODICE PER PROGETTO BASE
+
         String filePath = "informazioni.txt";
         try {
             File file = new File(filePath);
@@ -38,6 +40,11 @@ public class RubricaTelefonica extends JFrame {
         } catch (FileNotFoundException e) {
 
         }
+
+
+
+
+
 
         //CARICO L'INTERFACCIA;
 
