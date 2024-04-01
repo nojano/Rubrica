@@ -18,33 +18,27 @@ public class RubricaTelefonica extends JFrame {
     private DefaultTableModel modello; //Modello tabella
     public Vector<Persona> rubrica = new Vector<>();
 
+    public File[] informazioni;
+
     public RubricaTelefonica() {
 
         // CARICO I CONTATTI GIÀ PRESENTI NEL FILE RUBRICA NEL VETTORE RUBRICA;
 
-        //INIZIO CODICE PER PROGETTO BASE
-
-        String filePath = "informazioni.txt";
-        try {
-            File file = new File(filePath);
-            Scanner scanner = new Scanner(file);
-
-            while (scanner.hasNextLine()) {
-                String riga = scanner.nextLine(); // Legge una riga dal file
-                String[] elementi = riga.split(";");
-                Persona persona = new Persona(elementi[0], elementi[1], elementi[2], elementi[3], Integer.parseInt(elementi[4]));
-                rubrica.add(persona);
-
+        String folderpath = "informazioni";
+        File cartella = new File(folderpath);
+        informazioni = cartella.listFiles();
+        if (informazioni != null && informazioni.length > 0) {
+            for (File file: informazioni){
+                try{ Scanner scanner = new Scanner(file);
+                    String riga = scanner.nextLine(); // Legge una riga dal file
+                    String[] elementi = riga.split(";");
+                    Persona persona = new Persona(elementi[0], elementi[1], elementi[2], elementi[3], Integer.parseInt(elementi[4]));
+                    rubrica.add(persona);
+                    scanner.close();
+                }
+                catch (FileNotFoundException e){ }
             }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-
         }
-
-
-
-
-
 
         //CARICO L'INTERFACCIA;
 
@@ -98,17 +92,13 @@ public class RubricaTelefonica extends JFrame {
                     int choice = JOptionPane.showConfirmDialog(null, "Eliminare la persona " +
                             rubrica.get(row).getNome() + " " + rubrica.get(row).getCognome() + "?");
                     if (choice == JOptionPane.YES_OPTION) {
+                        File fileDaEliminare = new File("informazioni", rubrica.get(row).getNome() + "." + rubrica.get(row).getCognome()+".txt");
+                        fileDaEliminare.delete();
                         rubrica.remove(row);
                         refreshTable();
                     }
                 }
-                try (PrintStream printStream = new PrintStream(new FileOutputStream(new File(filePath)))) {
-                    for(Persona persona: rubrica){
-                        printStream.println(persona.getNome()+";"+persona.getCognome()+";"+ persona.getIndirizzo()+";"+persona.getTelefono()+";"+persona.getEta());
-                    }
-                } catch (Exception ex) {
-                    System.err.println("Errore durante la scrittura su file: " + ex.getMessage());
-                }
+
             }
         });
 

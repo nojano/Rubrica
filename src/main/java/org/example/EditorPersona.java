@@ -57,15 +57,23 @@ public class EditorPersona extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String nome = nomeField.getText();
                 String cognome = cognomeField.getText();
+                String check = nome + "."+ cognome;
                 String indirizzo = indirizzoField.getText();
                 String telefono = telefonoField.getText();
+                String eta = etaField.getText();
+                for(Persona persona : rubrica.rubrica){
+                    String checkRub = persona.getNome() + "." + persona.getCognome();
+                    if(check.equals(checkRub)){
+                        JOptionPane.showMessageDialog(null, "Persona con stesso nome e cognome già presente in rubrica. Perfavore inserisci un identificativo univoco.");
+                        return;
+                    }
+                }
                 if(!StringaSoloNumeri(telefono)){
                     JOptionPane.showMessageDialog(null, "Inserisci un numero di telefono valido.");
                     return; // Esce dal metodo se il numero di telefono non è valido
                 } else if(telefono.isEmpty()){
                     telefono = "-1";
                 }
-                String eta = etaField.getText();
                 if(!StringaSoloNumeri(eta)){
                     JOptionPane.showMessageDialog(null, "Inserisci un valore valido per l'età.");
                     return; // Esce dal metodo se l'età non è valida
@@ -86,11 +94,22 @@ public class EditorPersona extends JFrame {
                 dispose();
 
 
-                String filePath = "informazioni.txt";
-                try (PrintStream printStream = new PrintStream(new FileOutputStream(new File(filePath)))) {
-                    for(Persona persona: rubrica.rubrica){
-                        printStream.println(persona.getNome()+";"+persona.getCognome()+";"+ persona.getIndirizzo()+";"+persona.getTelefono()+";"+persona.getEta());
+                String folderPath = "informazioni";
+                File cartella = new File(folderPath);
+                if(!cartella.exists()){
+                    cartella.mkdirs();
+                }
+                String fileNome= nome + "."+ cognome;
+
+                /*for(File file:rubrica.informazioni){
+                    if(file.getName().equals(fileNome+ ".txt")){
+                        fileNome = fileNome + ".1";
                     }
+                }*/
+                fileNome = fileNome + ".txt";
+                String filePath = folderPath + File.separator + fileNome;
+                try (PrintStream printStream = new PrintStream(new FileOutputStream(new File(filePath)))) {
+                    printStream.println(nome+";"+cognome+";"+ indirizzo+";"+telefono+";"+eta);
                 } catch (Exception ex) {
                     System.err.println("Errore durante la scrittura su file: " + ex.getMessage());
                 }
