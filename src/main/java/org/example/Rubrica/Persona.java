@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Rubrica;
 
 public class Persona {
     private String nome;

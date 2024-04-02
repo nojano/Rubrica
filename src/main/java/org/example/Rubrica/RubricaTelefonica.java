@@ -1,15 +1,15 @@
-package org.example;
+package org.example.Rubrica;
+
+import org.example.Rubrica.EditorPersona;
+import org.example.Rubrica.Persona;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -22,7 +22,7 @@ public class RubricaTelefonica extends JFrame {
 
     public RubricaTelefonica() {
 
-        // CARICO I CONTATTI GIÀ PRESENTI NEL FILE RUBRICA NEL VETTORE RUBRICA;
+        // CARICO I CONTATTI GIÀ PRESENTI NELLA CARTELLA "INFORMAZIONI" NEL VETTORE RUBRICA;
 
         String folderpath = "informazioni";
         File cartella = new File(folderpath);
@@ -30,7 +30,7 @@ public class RubricaTelefonica extends JFrame {
         if (informazioni != null && informazioni.length > 0) {
             for (File file: informazioni){
                 try{ Scanner scanner = new Scanner(file);
-                    String riga = scanner.nextLine(); // Legge una riga dal file
+                    String riga = scanner.nextLine();
                     String[] elementi = riga.split(";");
                     Persona persona = new Persona(elementi[0], elementi[1], elementi[2], elementi[3], Integer.parseInt(elementi[4]));
                     rubrica.add(persona);

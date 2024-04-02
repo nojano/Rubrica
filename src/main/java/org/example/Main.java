@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.Login.LoginPage;
+import org.example.Rubrica.RubricaTelefonica;
+
 import javax.swing.*;
 
 public class Main {
@@ -7,7 +10,7 @@ public class Main {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new RubricaTelefonica();
+                new LoginPage().setVisible(true);
             }
         });
     }
